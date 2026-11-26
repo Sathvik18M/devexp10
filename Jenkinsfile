@@ -5,23 +5,21 @@ pipeline {
     environment {
         REGISTRY   = "localhost:5000"
         IMAGE_NAME = "student-demo-app"
+        PYTHON     = "C:/Users/STUDENT/AppData/Local/Programs/Python/Python313/python.exe"
     }
 
     stages {
-        stage('1. Checkout Code') {
+        stage('1. Application Build & Test') {
             steps {
-                checkout scm
-            }
-        }
+                echo "Verifying Python installation..."
+                bat '"%PYTHON%" --version'
 
-        stage('2. Application Build & Test') {
-            steps {
                 echo "Verifying Python syntax..."
-                bat 'python -m py_compile app.py'
+                bat '"%PYTHON%" -m py_compile app.py'
             }
         }
 
-        stage('3. Build & Tag Docker Image') {
+        stage('2. Build & Tag Docker Image') {
             steps {
                 echo "Building Docker image..."
 
@@ -31,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('4. Push Image to Registry') {
+        stage('3. Push Image to Registry') {
             steps {
                 echo "Pushing images to local registry..."
 
